@@ -11,7 +11,7 @@ Personal workflow for ENG1 Jira tickets across repos. Follow steps in order. Do 
 ## Prerequisites
 
 - Atlassian MCP available (`plugin-atlassian-atlassian`).
-- GitHub MCP server `github` available and authenticated. If missing or unauthenticated, **stop** and tell the user — never fall back to `gh`.
+- Prefer GitHub MCP server `github` when available and authenticated. GitHub CLI is acceptable as a fallback if the GitHub MCP is not available.
 
 ## Setup (once per invocation)
 
@@ -51,7 +51,10 @@ ENG1 Ticket Progress:
 ### 4–5. Repo prep
 
 - Prefer `main`, else `master`. Checkout and pull so the default branch is up to date.
-- If issuetype is **Bug**, reproduce with the browser or direct HTTP calls before changing code.
+- If issuetype is **Bug**, reproduce before changing code:
+  - Prefer direct HTTP when that fully covers the issue.
+  - If the ticket reproduction includes a browser UI aspect, exercise it via a controlled browser.
+  - If a test account is needed, locate a random account and reset the password if necessary to enable login.
 
 ### 6. Branch
 
@@ -68,7 +71,7 @@ Create a new branch off the default branch named with the ticket key in **lowerc
 - Create work subtasks on the parent with `createJiraIssue` (`projectKey: ENG1`, `parent: <ticket key>`, appropriate issue type).
 - Transition work subtasks as work proceeds; they should end **Done**.
 - Complete the necessary code changes.
-- Test the fix.
+- Test the fix (same browser/HTTP approach as reproduction when applicable).
 
 ### 12–15. Closeout subtasks
 
@@ -83,10 +86,9 @@ Create two subtasks that remain in **To Do**:
 
 - Commit (allowed when this skill is active) following the repo’s commit message style.
 - `git push -u` the branch.
-- Create the PR with GitHub MCP `create_pull_request` (not `gh`):
+- Create the PR — prefer GitHub MCP `create_pull_request`; use `gh pr create` if the GitHub MCP is not available:
   - Derive `owner` and `repo` from `git remote get-url origin`.
-  - Required args: `owner`, `repo`, `title`, `head`, `base` (plus body).
-  - **Never** call `create_pull_request` without those five args.
+  - MCP required args: `owner`, `repo`, `title`, `head`, `base` (plus body). **Never** call `create_pull_request` without those five args.
   - PR **title must include the ticket key** (e.g. `ENG1-123: …`).
 - Return the PR URL to the user.
 
@@ -96,7 +98,8 @@ Create two subtasks that remain in **To Do**:
 |------|--------|
 | Jira | `atlassianUserInfo`, `getAccessibleAtlassianResources`, `getJiraIssue`, `editJiraIssue`, `getTransitionsForJiraIssue`, `transitionJiraIssue`, `createJiraIssue`, `getJiraProjectIssueTypesMetadata`, `getJiraIssueTypeMetaWithFields` |
 | Git | checkout/pull, branch, commit, `git push -u` |
-| GitHub | MCP `create_pull_request` on server `github` |
+| GitHub | Prefer MCP `create_pull_request` on server `github`; fallback `gh pr create` |
+| Browser | Controlled browser (cursor-ide-browser) when reproduction/verification has a UI aspect |
 
 ## Rules
 
@@ -105,5 +108,7 @@ Create two subtasks that remain in **To Do**:
 - Deploy description only when manual intervention is required; otherwise empty.
 - Release Note is required on Deploy.
 - Reproduce Bugs before coding.
+- If the ticket reproduction includes a browser UI aspect, exercise it via a controlled browser.
+- If a test account is needed, locate a random account and reset the password if necessary to enable login.
 - Prefer existing repo commit conventions; always include ticket key in PR title.
-- No `gh` CLI; if GitHub MCP is unavailable, stop and tell the user.
+- Prefer GitHub MCP; GitHub CLI is acceptable as a fallback if the GitHub MCP is not available.
