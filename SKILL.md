@@ -29,7 +29,7 @@ These four subtasks may already exist (often created with the parent). **Check f
 |---------|----------|
 | **Development** | **In Progress** while implementing; **Done** when ready for review. |
 | **Code Review** | Stays **To Do**. Description = testing instructions for the reviewing developer (code review **and** automated/manual testing). |
-| **Stakeholder Review** | Decision point — ask the user. If needed: stay **To Do**, description = simple reproduction steps for stakeholders. If not: **delete** the task. |
+| **Stakeholder Review** | Decision point — ask the user. If needed: stay **To Do**, description = simple reproduction steps for stakeholders. If not: add a comment explaining why it is not needed, then set to **Done**. |
 | **Deploy** | Stays **To Do**. Same as before (issue type **Deploy**, Release Note required). |
 
 Match existing issues by summary (`Development`, `Code Review`, `Stakeholder Review`, `Deploy`). Deploy may also be identified by issue type **Deploy**.
@@ -97,7 +97,7 @@ Ensure each of the following (edit if present; create only if missing):
 1. **Code Review** — stays **To Do**. Set description to detailed testing instructions targeted at the reviewing developer. Cover code review plus automated and/or manual testing needed to verify the work.
 2. **Stakeholder Review** — **ask the user** whether stakeholder review is needed.
    - If **yes**: stay **To Do**; set description to simple reproduction steps targeted at stakeholders.
-   - If **no**: **delete** this subtask. (Atlassian MCP has no delete tool — use Jira REST `DELETE /rest/api/3/issue/{key}`, or ask the user to delete it.)
+   - If **no**: add a comment explaining why stakeholder review is not needed, then transition the subtask to **Done**.
 3. **Deploy** — use issue type **Deploy** (`issueTypeName: Deploy`) when creating. Stays **To Do**.
    - If deploy needs manual intervention (untracked config, log checks, new cron entries, etc.), document that in the Deploy description; otherwise leave description empty.
    - Set the **Release Note** field on the Deploy issue (required) via discovered field id in `additional_fields` / `editJiraIssue`.
@@ -116,7 +116,7 @@ Ensure each of the following (edit if present; create only if missing):
 
 | Area | Tools |
 |------|--------|
-| Jira | `atlassianUserInfo`, `getAccessibleAtlassianResources`, `getJiraIssue`, `searchJiraIssuesUsingJql`, `editJiraIssue`, `getTransitionsForJiraIssue`, `transitionJiraIssue`, `createJiraIssue`, `getJiraProjectIssueTypesMetadata`, `getJiraIssueTypeMetaWithFields` |
+| Jira | `atlassianUserInfo`, `getAccessibleAtlassianResources`, `getJiraIssue`, `searchJiraIssuesUsingJql`, `editJiraIssue`, `getTransitionsForJiraIssue`, `transitionJiraIssue`, `createJiraIssue`, `addCommentToJiraIssue`, `getJiraProjectIssueTypesMetadata`, `getJiraIssueTypeMetaWithFields` |
 | Git | checkout/pull, branch, commit, `git push -u` |
 | GitHub | Prefer MCP `create_pull_request` on server `github`; fallback `gh pr create` |
 | Bugs | Debug mode + code instrumentation + user-driven reproduction; read logs. Prefer HTTP when sufficient. Do **not** use automated browser control. |
@@ -126,7 +126,7 @@ Ensure each of the following (edit if present; create only if missing):
 - Do not continue past planning without explicit user approval.
 - Never create a duplicate of Development / Code Review / Stakeholder Review / Deploy — check existing subtasks first and edit.
 - Development → **In Progress** while working → **Done** when ready for review.
-- Code Review and Deploy stay **To Do**; Stakeholder Review stays **To Do** only if the user says it is needed, otherwise delete it.
+- Code Review and Deploy stay **To Do**; Stakeholder Review stays **To Do** only if the user says it is needed, otherwise comment why it is not needed and set it to **Done**.
 - Deploy description only when manual intervention is required; otherwise empty.
 - Release Note is required on Deploy.
 - Determine Bug causes before drafting a fix plan. Prefer HTTP when sufficient; for browser-based Bugs use Debug mode, instrument, user-driven repro, then read logs — never automated browser control.
